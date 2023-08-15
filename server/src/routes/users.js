@@ -2,6 +2,8 @@ import express from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { UserModel } from "../models/Users.js";
+import dotenv from "dotenv";
+dotenv.config();
 
 const router = express.Router();
 
@@ -22,7 +24,20 @@ router.post("/register", async (req, res) => {
 
 });
 
-router.post("/login");
+router.post("/login", async (req, res) => {
+    const {username, password} = req.body;
+    const user = await UserModel.findOne({username: username});
+    
+    if (!user) return res.json({message: "Username or Password is incorrect!"});
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) return res.json({message: "Username or Password is incorrect!"});
+
+    const token = jwt.sign({id: user._id}, process.env.JWT_SECRET);
+    res.json({token:token, userID: user._id})
+
+
+});
 
 
 
