@@ -6,7 +6,7 @@ const UserSchema = new mongoose.Schema({
     password: {type:String, require:true},
 });
 
-export const UserModel = mongoose.model("users", User) // "users" is the name of the collection 
+export const UserModel = mongoose.model("users", UserSchema) // "users" is the name of the collection 
 
 
 
