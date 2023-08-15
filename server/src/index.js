@@ -4,8 +4,6 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import { userRouter } from "./routes/users.js";
 
-dotenv.config();
-
 const app = express();
 
 app.use(express.json());  // when sending data from the frontend it will convert into json automatically
