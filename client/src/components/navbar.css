@@ -1,0 +1,25 @@
+/* NavBar.css */
+
+.navbar {
+    width: 100%;
+}
+
+.nav-item .nav-link.btn.btn-outline-secondary {
+    color: white !important;
+    transition: color 200ms;
+}
+
+/* Change color on hover */
+.nav-item .nav-link.btn.btn-outline-secondary:hover {
+    color: #555555 !important; /* Slightly lighter color on hover */
+}
+
+.home-link {
+    font-size: 1.5rem; /* This will make the Home link a bit bigger */
+    margin-right: auto !important; /* Ensures it stays to the left */
+}
+
+/* If you want additional spacing between the buttons/squares */
+.nav-item {
+    margin-right: 5px; 
+}
