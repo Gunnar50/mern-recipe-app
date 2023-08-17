@@ -5,6 +5,7 @@ import {Auth} from "./pages/auth"
 import {Create} from "./pages/create"
 import {Saved} from "./pages/saved"
 import {NavBar} from "./components/navbar"
+import ProtectedRoute from './routes/ProtectedRoute';
 
 
 function App() {
@@ -15,7 +16,7 @@ function App() {
 			<Routes>
 				<Route path='/' element={<Home/>} />
 				<Route path='/auth' element={<Auth/>} />
-				<Route path='/create' element={<Create/>} />
+				<Route path='/create' element={<ProtectedRoute component={Create}/>} />
 				<Route path='/saved' element={<Saved/>} />
 			</Routes>
 		</Router>
