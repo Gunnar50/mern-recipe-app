@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import {useCookies} from "react-cookie"
-import {Navigate, useNavigate} from "react-router-dom"
+import {useNavigate} from "react-router-dom"
 
 
 export const Auth = () => {
