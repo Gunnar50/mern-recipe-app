@@ -2,13 +2,14 @@ import mongoose from "mongoose";
 
 
 const RecipeSchema = new mongoose.Schema({
-    name: {type:String, require:true},
-    ingredients: [{type:String, require:true, }],
-    description: {type:String, require:true},
-    image: {type:String, require:true},
-    cookingTime: {type:Number, require:true},
-    creator: {type:mongoose.Schema.Types.ObjectId, ref:"users", require:true},
-    
+    name: {type:String, required:true},
+    ingredients: [{type:String, required:true, }],
+    description: {type:String, required:true},
+    image: {type:String, required:true},
+    cookingTime: {type:Number, required:true},
+    votes: {type:Number, default: 0},
+    creator: {type:mongoose.Schema.Types.ObjectId, ref:"users", required:true},
+    date: {type:Date, default:Date.now()}
 
 });
 
