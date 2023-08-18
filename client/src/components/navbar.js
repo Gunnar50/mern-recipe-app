@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import './navbar.css';
 import {useCookies} from "react-cookie";
 import { useState, useEffect } from 'react';
-import axios from 'axios'; // Assuming you're using axios for HTTP requests.
+import axios from 'axios';
 
 export const NavBar = () => {
     const [cookies, setCookies] = useCookies(["access_token"]);
@@ -17,7 +17,6 @@ export const NavBar = () => {
                         'Authorization': cookies.access_token
                     }
                 });
-                console.log("response", response.data.valid);
                 if(response.data.valid) {
                     setIsAuthenticated(true);
                 } else {
