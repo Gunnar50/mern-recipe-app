@@ -10,7 +10,7 @@ export const NavBar = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const verifyToken = async () => {
+        const verifyAccess = async () => {
             try {
                 const response = await axios.get('http://localhost:3001/auth/verify-token', {
                     headers: {
@@ -28,7 +28,7 @@ export const NavBar = () => {
             }
         }
         if(cookies.access_token) {
-            verifyToken();
+            verifyAccess();
         }
     }, [cookies.access_token]);
 
