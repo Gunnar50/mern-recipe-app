@@ -1,6 +1,13 @@
-.ingredient-list {
-  list-style-type: disc !important;
-  padding-left: 20px;
-  display:list-item;
-  list-style-position:inside;
+.link-like {
+  cursor: pointer; /* Changes cursor to hand, like links */
+  color: gray; /* Common link color */
+  transition: color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.link-like:hover {
+  color: darkblue; /* Darkens the link on hover */
+}
+
+.link-like.disabled {
+  cursor: auto;
 }
