@@ -12,3 +12,13 @@ Content-Type: application/json
 
 ###
 GET http://localhost:3001/recipes/
+
+###
+
+POST http://localhost:3001/recipes/save
+Content-Type: application/json
+
+{
+    "recipeID": "64df51185edc48ef35bd783a",
+    "userID": "64df8a2aa48f293a10c51788"
+}

@@ -23,10 +23,11 @@ export const saveRecipe = async (req, res) => {
     try {
         const recipe = await RecipeModel.findById(req.body.recipeID);
         const user = await UserModel.findById(req.body.userID);
+        console.log(req.body.recipeID);
         user.savedRecipes.push(recipe);
         await user.save();
         res.json({savedRecipes: user.savedRecipes});
-        
+
     } catch(err) {res.json(err);}
 
 }
