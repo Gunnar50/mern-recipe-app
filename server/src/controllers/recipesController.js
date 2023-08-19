@@ -34,7 +34,7 @@ export const voteForRecipe = async (req, res) => {
 
 }
 
-export const getSavedRecipesIDs = async (req, res) => {
+export const getVotedRecipesIDs = async (req, res) => {
     try {
         const user = await UserModel.findById(req.params.id);
         res.json({votedRecipes: user?.votedRecipes})
@@ -43,11 +43,20 @@ export const getSavedRecipesIDs = async (req, res) => {
     
 }
 
-export const getSavedRecipes = async (req, res) => {
+export const getVotedRecipes = async (req, res) => {
     try {
-        const user = await UserModel.findById(req.body.userID);
-        const votedRecipes = await RecipeModel.find({_id: {$in: user.votedRecipes}});
+        const user = await UserModel.findById(req.params.id);
+        const votedRecipes = await RecipeModel.find({_id: {$in: user.votedRecipes}}).populate("creator", "username").exec();
         res.json({votedRecipes: votedRecipes})
+        
+    } catch(err) {res.json(err);}
+    
+}
+
+export const getRecipeID = async (req, res) => {
+    try {
+        const recipe = await RecipeModel.findById(req.body.recipeID);
+        res.json({recipe});
         
     } catch(err) {res.json(err);}
     
