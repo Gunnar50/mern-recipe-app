@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { UserModel } from "../models/Users.js";
 import dotenv from "dotenv";
-import { registerUser, loginUser, verifyToken } from "../controllers/userController.js";
+import { registerUser, loginUser, verifyToken, getCurrentUser } from "../controllers/userController.js";
 import {authMiddleware} from "../middleware/authMiddleware.js";
 dotenv.config();
 
@@ -13,6 +13,7 @@ const router = express.Router();
 router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.get("/verify-token", authMiddleware, verifyToken); // applied the middleware before the verifyToken controller
+router.get("/user/:id", getCurrentUser);
 
 
 // router.post("/register", async (req, res) => {
