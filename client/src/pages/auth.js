@@ -18,19 +18,6 @@ const Login = () => {
     const navigate = useNavigate();
     const [, setCookies] = useCookies(["access_token"])
 
-    // const onSubmit = async (event) => {
-    //     event.preventDefault();
-    //     try{
-    //         const response = await axios.post("http://localhost:3001/auth/login", {username, password});
-            
-    //         setCookies("access_token", response.data.token);
-    //         window.localStorage.setItem("userID", response.data.userID);
-    //         navigate("/");
-    //         console.log(response);
-
-    //     } catch(err) {console.error(err)};
-    // }
-
     const onSubmit = async (event) => {
         event.preventDefault();
         try {
