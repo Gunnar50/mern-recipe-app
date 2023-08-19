@@ -7,8 +7,8 @@ const RecipeSchema = new mongoose.Schema({
     description: {type:String, required:true},
     image: {type:String, required:true},
     cookingTime: {type:Number, required:true},
-    votes: {type:Number, default: 0},
     creator: {type:mongoose.Schema.Types.ObjectId, ref:"users", required:true},
+    votes: {type:Number, default: 0},
     date: {type:Date, default:Date.now()}
 
 });
