@@ -1,8 +1,10 @@
 import { useState } from "react"
 import axios from "axios";
 import {useNavigate} from "react-router-dom"
+import {useCookies} from "react-cookie";
 
 export const Create = () => {
+    const [cookies, ] = useCookies(["access_token"]);
     const navigate = useNavigate();
     const [recipe, setRecipe] = useState({
         name: "",
@@ -43,8 +45,11 @@ export const Create = () => {
             alert('Please add at least one ingredient.');
             return;
         }
+
         try {
-            await axios.post("http://localhost:3001/recipes/create", recipe);
+            await axios.post("http://localhost:3001/recipes/create", recipe, {
+                headers: {"Authorization": cookies.access_token}
+            });
             alert("Recipe Created!");
             navigate("/");
         } catch (err) {console.error(err);}

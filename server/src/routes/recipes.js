@@ -7,7 +7,7 @@ import { getAllRecipes, createRecipe, saveRecipe, getSavedRecipes, getSavedRecip
 const router = express.Router();
 
 router.get("/", getAllRecipes)
-router.post("/create", createRecipe)
+router.post("/create", authMiddleware, createRecipe)
 router.post("/save", saveRecipe)
 router.get("/get-recipes/ids", getSavedRecipesIDs)
 router.get("/get-recipes", getSavedRecipes)
