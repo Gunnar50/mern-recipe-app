@@ -30,6 +30,13 @@ export const loginUser = async (req, res) => {
     res.json({ token: token, userID: user._id });
 };
 
+export const getCurrentUser = async (req, res) => {
+    try{    
+        const user = await UserModel.findById(req.params.id);
+        res.json({username: user.username});
+    } catch(err) {console.log(err);}
+}
+
 export const verifyToken = (req, res) => {
     // Since the auth middleware is already verifying the token, 
     // you can just respond here that it's valid.
