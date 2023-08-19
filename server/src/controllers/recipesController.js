@@ -4,7 +4,7 @@ import { UserModel } from "../models/Users.js";
 
 export const getAllRecipes = async (req, res) => {
     try {
-        const response = await RecipeModel.find({});
+        const response = await RecipeModel.find({}).populate("creator", "username").exec();
         res.json(response);
     } catch(err) {res.json(err);}
 }
@@ -19,14 +19,16 @@ export const createRecipe = async (req, res) => {
 
 }
 
-export const saveRecipe = async (req, res) => {
+export const voteForRecipe = async (req, res) => {
     try {
         const recipe = await RecipeModel.findById(req.body.recipeID);
         const user = await UserModel.findById(req.body.userID);
-        console.log(req.body.recipeID);
-        user.savedRecipes.push(recipe);
+        user.votedRecipes.push(recipe);
+        recipe.votes++;
         await user.save();
-        res.json({savedRecipes: user.savedRecipes});
+        await recipe.save();
+
+        res.json({votedRecipes: user.votedRecipes});
 
     } catch(err) {res.json(err);}
 
@@ -34,8 +36,8 @@ export const saveRecipe = async (req, res) => {
 
 export const getSavedRecipesIDs = async (req, res) => {
     try {
-        const user = await UserModel.findById(req.body.userID);
-        res.json({savedRecipes: user?.savedRecipes})
+        const user = await UserModel.findById(req.params.id);
+        res.json({votedRecipes: user?.votedRecipes})
         
     } catch(err) {res.json(err);}
     
@@ -44,8 +46,8 @@ export const getSavedRecipesIDs = async (req, res) => {
 export const getSavedRecipes = async (req, res) => {
     try {
         const user = await UserModel.findById(req.body.userID);
-        const savedRecipes = await RecipeModel.find({_id: {$in: user.savedRecipes}});
-        res.json({savedRecipes: savedRecipes})
+        const votedRecipes = await RecipeModel.find({_id: {$in: user.votedRecipes}});
+        res.json({votedRecipes: votedRecipes})
         
     } catch(err) {res.json(err);}
     
