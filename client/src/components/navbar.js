@@ -45,12 +45,14 @@ export const NavBar = () => {
 
             <div className="collapse navbar-collapse justify-content-end">
                 <div className="navbar-nav">
-                    <Link className="nav-item nav-link btn btn-outline-secondary mr-2" to="/create">Create Recipe</Link>
-                    <Link className="nav-item nav-link btn btn-outline-secondary mr-2" to="/saved">Saved Recipes</Link>
                     {!isAuthenticated ? 
                         (<Link className="nav-item nav-link btn btn-outline-secondary" to="/auth">Login/Register</Link>)
                      : 
-                        <button className="nav-item nav-link btn btn-outline-secondary" onClick={Logout}>Logout</button>}
+                        <>
+                        <Link className="nav-item nav-link btn btn-outline-secondary mr-2" to="/create">Create Recipe</Link>
+                        <Link className="nav-item nav-link btn btn-outline-secondary mr-2" to="/saved">Favourite Recipes</Link>
+                        <button className="nav-item nav-link btn btn-outline-secondary" onClick={Logout}>Logout</button>
+                        </>}
                 </div>
             </div>
         </nav>
