@@ -16,7 +16,7 @@ const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
-    const [, setCookies] = useCookies(["access_token"])
+    const [_, setCookies] = useCookies(["access_token"])
 
     const onSubmit = async (event) => {
         event.preventDefault();
