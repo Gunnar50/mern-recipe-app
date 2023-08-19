@@ -5,7 +5,8 @@ import {useCookies} from "react-cookie"
 export const Home = () => {
     const [recipes, setRecipes] = useState([]);
     const [votedRecipes, setVotedRecipes] = useState([]);
-    const [cookies, _] = useCookies(["access_token"])
+    const [currentUsername, setCurrentUsername] = useState("");
+    const [cookies, ] = useCookies(["access_token"])
     const userID = window.localStorage.getItem("userID");
 
     const fetchRecipes = async () => {
@@ -17,6 +18,14 @@ export const Home = () => {
     }
 
     useEffect(() => {
+        const getCurrentUser = async () => {
+            try {
+                const response = await axios.get(`http://localhost:3001/auth/user/${userID}`);
+                setCurrentUsername(response.data.username);
+                
+            } catch (err) {console.error(err);}
+        }
+
         const fetchVotedRecipes = async () => {
             try {
                 const response = await axios.get(`http://localhost:3001/recipes/get-recipes/${userID}`);
@@ -26,6 +35,7 @@ export const Home = () => {
         }
 
         fetchRecipes();
+        getCurrentUser();
         if(cookies.access_token) fetchVotedRecipes();
     }, [])
 
@@ -56,8 +66,8 @@ export const Home = () => {
                         <div style={{ flex: 2, margin: '0 20px' }}>
                             <h2 className="card-title">{item.name}</h2>
                             <p>Cooking Time: {item.cookingTime} minutes</p>
-                            <h6>Author: {item.creator.username ? item.creator.username : 'Unknown'}</h6>
-                            <a href="/your-recipe-link">View Recipe</a>
+                            <h6>Author: {item.creator.username ? item.creator.username == currentUsername ? `${item.creator.username} (Me)` : item.creator.username : 'Unknown'}</h6>
+                            <a href={`/recipe/${item._id}`}>View Recipe</a>
                         </div>
 
                         {/* Right side content with thumbs up icon and vote count */}
