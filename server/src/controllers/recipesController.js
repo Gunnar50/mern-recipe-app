@@ -64,8 +64,23 @@ export const getRecipeID = async (req, res) => {
 
 export const getOwnRecipes = async (req, res) => {
     try {
-        const recipes = await await RecipeModel.find({creator: req.params.userid}).populate("creator", "username").exec();
+        const recipes = await RecipeModel.find({creator: req.params.userid}).populate("creator", "username").exec();
         res.json({recipes});
+        
+    } catch(err) {res.json(err);}
+    
+}
+
+export const deleteRecipe = async (req, res) => {
+    try {
+        const recipeID = req.params.id;
+        // remove the recipe object
+        const result = await RecipeModel.findByIdAndDelete(recipeID);
+        
+        // remove the recipe from the voted list in any user that voted for this recipe
+        await UserModel.updateMany({votedRecipes: recipeID}, {$pull: {votedRecipes: recipeID}});
+        
+        res.json(result);
         
     } catch(err) {res.json(err);}
     
