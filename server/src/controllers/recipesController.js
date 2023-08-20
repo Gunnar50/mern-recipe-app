@@ -86,6 +86,19 @@ export const deleteRecipe = async (req, res) => {
     
 }
 
+export const updateRecipe = async (req, res) => {
+    try {
+        const recipeID = req.params.recipeid;
+        const recipe = req.body;
+        const result = await RecipeModel.findByIdAndUpdate(recipeID, recipe, {new:true});
+        
+        
+        res.json(result);
+        
+    } catch(err) {res.json(err);}
+    
+}
+
 
 
 

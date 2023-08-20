@@ -9,7 +9,7 @@ const RecipeSchema = new mongoose.Schema({
     cookingTime: {type:Number, required:true},
     creator: {type:mongoose.Schema.Types.ObjectId, ref:"users", required:true},
     votes: {type:Number, default: 0},
-    date: {type:Date, default:Date.now()}
+    date: {type:Date, default:Date.now}
 
 });
 

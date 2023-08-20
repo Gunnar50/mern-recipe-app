@@ -7,6 +7,7 @@ import {Saved} from "./pages/saved"
 import {NavBar} from "./components/navbar"
 import Recipe from './pages/recipe';
 import { MyRecipes } from './pages/my-recipes';
+import { Edit } from './pages/recipe-edit';
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
 				<Route path='/saved' element={<Saved/>} />
 				<Route path='/my-recipes' element={<MyRecipes/>} />
 				<Route path='/recipe/:recipeID' element={<Recipe/>} />
+				<Route path='/my-recipes/:recipeID' element={<Edit/>} />
 			</Routes>
 		</BrowserRouter>
 	</div>

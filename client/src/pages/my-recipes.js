@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react"
 import axios from "axios";
 import {useCookies} from "react-cookie"
+import { useNavigate } from "react-router-dom";
 
 export const MyRecipes = () => {
     const [recipes, setRecipes] = useState([]);
+    const navigate = useNavigate();
     const [currentUsername, setCurrentUsername] = useState("");
     const [cookies, ] = useCookies(["access_token"])
     const userID = window.localStorage.getItem("userID");
@@ -19,8 +21,6 @@ export const MyRecipes = () => {
 
 
     useEffect(() => {
-        
-        
         const getCurrentUser = async () => {
             try {
                 if(userID){
@@ -37,11 +37,15 @@ export const MyRecipes = () => {
 
     const deleteRecipe = async(recipeID) => {
         try {
-            const response = await axios.delete(`http://localhost:3001/recipes/del/${recipeID}`)
+            await axios.delete(`http://localhost:3001/recipes/del/${recipeID}`)
             getOwnRecipes();
         } catch (error) {
             console.log(error);
         }
+    }
+
+    const editRecipe = (recipeID) => {
+        navigate(`/my-recipes/${recipeID}`);
     }
 
     if(!recipes) return null;
@@ -61,12 +65,12 @@ export const MyRecipes = () => {
                             <h2 className="card-title">{item.name}</h2>
                             <p>Cooking Time: {item.cookingTime} minutes</p>
                             <h6>Author: {item.creator.username ? item.creator.username === currentUsername ? `${item.creator.username} (Me)` : item.creator.username : 'Unknown'}</h6>
-                            <a href="/your-recipe-link">View Recipe</a>
+                            <a href={`/recipe/${item._id}`}>View Recipe</a>
                         </div>
 
                         {/* Right side content with thumbs up icon and vote count */}
                         <div className="d-flex flex-column align-items-center mr-5">
-                                <button className="btn btn-primary mb-2" style={{width:"80px"}}>Edit</button>
+                                <button className="btn btn-primary mb-2" style={{width:"80px"}} onClick={() => editRecipe(item._id)}>Edit</button>
                                 <button className="btn btn-danger" style={{width:"80px"}} onClick={() => deleteRecipe(item._id)}>Delete</button>
                         </div>
                     </div>

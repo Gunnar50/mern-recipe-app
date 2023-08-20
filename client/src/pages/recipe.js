@@ -12,7 +12,8 @@ export default function Recipe() {
     useEffect(() => {
         const getRecipe = async() => {
             try{
-                const response = await axios.get(`http://localhost:3001/recipes/get-recipes/${recipeID}`);
+                const response = await axios.get(`http://localhost:3001/recipes/get-recipe/${recipeID}`);
+                console.log(response);
                 setRecipe(response.data.recipe);
             }catch(err) {console.log(err);}
         }
