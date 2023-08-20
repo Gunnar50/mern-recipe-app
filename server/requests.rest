@@ -7,7 +7,7 @@ Content-Type: application/json
     "description": "Cook in the bbq at high heat.",
     "image": "https://www.seriouseats.com/thmb/WzQz05gt5witRGeOYKTcTqfe1gs=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/butter-basted-pan-seared-steaks-recipe-hero-06-03b1131c58524be2bd6c9851a2fbdbc3.jpg",
     "cookingTime": 30,
-    "creator": "64df1851c8828464a384a84e"
+    "creator": "64df8a2aa48f293a10c51788"
 }
 
 ###
