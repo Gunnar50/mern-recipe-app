@@ -9,14 +9,17 @@ export const MyRecipes = () => {
     const userID = window.localStorage.getItem("userID");
 
 
+    const getOwnRecipes = async () => {
+        try {
+            const response = await axios.get(`http://localhost:3001/recipes/${userID}`);
+            setRecipes(response.data.recipes);
+            
+        } catch (err) {console.error(err);}
+    }
+
+
     useEffect(() => {
-        const getOwnRecipes = async () => {
-            try {
-                const response = await axios.get(`http://localhost:3001/recipes/${userID}`);
-                setRecipes(response.data.recipes);
-                
-            } catch (err) {console.error(err);}
-        }
+        
         
         const getCurrentUser = async () => {
             try {
@@ -31,6 +34,15 @@ export const MyRecipes = () => {
         getCurrentUser();
         if(cookies.access_token) getOwnRecipes();
     }, [cookies.access_token, userID])
+
+    const deleteRecipe = async(recipeID) => {
+        try {
+            const response = await axios.delete(`http://localhost:3001/recipes/del/${recipeID}`)
+            getOwnRecipes();
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     if(!recipes) return null;
 
@@ -55,7 +67,7 @@ export const MyRecipes = () => {
                         {/* Right side content with thumbs up icon and vote count */}
                         <div className="d-flex flex-column align-items-center mr-5">
                                 <button className="btn btn-primary mb-2" style={{width:"80px"}}>Edit</button>
-                                <button className="btn btn-danger" style={{width:"80px"}}>Delete</button>
+                                <button className="btn btn-danger" style={{width:"80px"}} onClick={() => deleteRecipe(item._id)}>Delete</button>
                         </div>
                     </div>
                 </div>
