@@ -51,6 +51,7 @@ export const NavBar = () => {
                         <>
                         <Link className="nav-item nav-link btn btn-outline-secondary mr-2" to="/create">Create Recipe</Link>
                         <Link className="nav-item nav-link btn btn-outline-secondary mr-2" to="/saved">Favourite Recipes</Link>
+                        <Link className="nav-item nav-link btn btn-outline-secondary mr-2" to="/my-recipes">My Recipes</Link>
                         <button className="nav-item nav-link btn btn-outline-secondary" onClick={Logout}>Logout</button>
                         </>}
                 </div>

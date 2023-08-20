@@ -6,6 +6,7 @@ import {Create} from "./pages/create"
 import {Saved} from "./pages/saved"
 import {NavBar} from "./components/navbar"
 import Recipe from './pages/recipe';
+import { MyRecipes } from './pages/my-recipes';
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
 				<Route path='/auth' element={<Auth/>} />
 				<Route path='/create' element={<Create />} />
 				<Route path='/saved' element={<Saved/>} />
+				<Route path='/my-recipes' element={<MyRecipes/>} />
 				<Route path='/recipe/:recipeID' element={<Recipe/>} />
 			</Routes>
 		</BrowserRouter>

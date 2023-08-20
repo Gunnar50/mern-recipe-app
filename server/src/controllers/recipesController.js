@@ -55,8 +55,17 @@ export const getVotedRecipes = async (req, res) => {
 
 export const getRecipeID = async (req, res) => {
     try {
-        const recipe = await RecipeModel.findById(req.body.recipeID);
+        const recipe = await RecipeModel.findById(req.params.recipeid).populate("creator", "username").exec();
         res.json({recipe});
+        
+    } catch(err) {res.json(err);}
+    
+}
+
+export const getOwnRecipes = async (req, res) => {
+    try {
+        const recipes = await await RecipeModel.find({creator: req.params.userid}).populate("creator", "username").exec();
+        res.json({recipes});
         
     } catch(err) {res.json(err);}
     
