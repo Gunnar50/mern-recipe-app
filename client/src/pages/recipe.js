@@ -29,7 +29,7 @@ export default function Recipe() {
 
         getCurrentUser();
         getRecipe();
-    }, [])
+    }, [recipeID, userID])
 
     if (!recipe) return null;
 
