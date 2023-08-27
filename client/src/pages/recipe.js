@@ -5,9 +5,9 @@ import { useParams } from "react-router-dom"
 
 export default function Recipe() {
     const {recipeID} = useParams();
+    const userID = window.localStorage.getItem("userID");
     const [recipe, setRecipe] = useState(null);
     const [currentUsername, setCurrentUsername] = useState("");
-    const userID = window.localStorage.getItem("userID");
     
     useEffect(() => {
         const getRecipe = async() => {
@@ -68,8 +68,17 @@ export default function Recipe() {
                         <p>{recipe.description}</p>
                     </div>
                 </div>
+
+                <div className="d-flex justify-content-between mt-5">
+                    <h2 className="card-title">Comments</h2>
+                    {recipe.comments.map((comment) => {
+                        <p>Author: {comment.username}</p>
+                    })}
+                </div>
             </div>
             
+        
+
         </div>
     )
 }

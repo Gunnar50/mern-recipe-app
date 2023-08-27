@@ -1,3 +1,4 @@
+import { CommentModel } from "../models/Comments.js";
 import { RecipeModel } from "../models/Recipes.js";
 import { UserModel } from "../models/Users.js";
 
@@ -55,8 +56,18 @@ export const getVotedRecipes = async (req, res) => {
 
 export const getRecipeID = async (req, res) => {
     try {
-        const recipe = await RecipeModel.findById(req.params.recipeid).populate("creator", "username").exec();
-        res.json({recipe});
+        const recipe = await RecipeModel.findById(req.params.recipeid)
+        .populate('creator', 'username') // populate the creator in the recipe
+        .populate({ 
+            path: 'comments', // populate comments
+            populate: {
+            path: 'creator', // populate the creator within each comment
+            select: 'username' // we only want to get the username field
+            }
+        })
+      .exec();
+      
+      res.json({ recipe });
         
     } catch(err) {res.json(err);}
     
@@ -100,5 +111,18 @@ export const updateRecipe = async (req, res) => {
 }
 
 
+export const createComment = async (req, res) => {
+    try {
+        const recipeID = req.params.recipeid;
+        const newComment = new CommentModel(req.body);
+        const recipe = await RecipeModel.findById(recipeID);
+        recipe.comments.push(newComment);
+        await comment.save();
+        await recipe.save();
+
+        res.json({comments: recipe.comments});
+    } catch(err) {res.json(err);}
+
+}
 
 
