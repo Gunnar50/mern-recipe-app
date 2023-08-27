@@ -15,10 +15,10 @@ GET http://localhost:3001/recipes/
 
 ###
 
-POST http://localhost:3001/recipes/save
+POST http://localhost:3001/recipes/64eb91dce7731bd15cd3ec6c
 Content-Type: application/json
 
 {
-    "recipeID": "64df51185edc48ef35bd783a",
-    "userID": "64df8a2aa48f293a10c51788"
+    "comment": "This is test comment!",
+    "creator": "64df8a2aa48f293a10c51788"
 }

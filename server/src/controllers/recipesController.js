@@ -24,8 +24,8 @@ export const voteForRecipe = async (req, res) => {
     try {
         const recipe = await RecipeModel.findById(req.body.recipeID);
         const user = await UserModel.findById(req.body.userID);
-        user.votedRecipes.push(recipe);
         recipe.votes++;
+        user.votedRecipes.push(recipe);
         await user.save();
         await recipe.save();
 
@@ -115,9 +115,9 @@ export const createComment = async (req, res) => {
     try {
         const recipeID = req.params.recipeid;
         const newComment = new CommentModel(req.body);
+        await newComment.save();
         const recipe = await RecipeModel.findById(recipeID);
         recipe.comments.push(newComment);
-        await comment.save();
         await recipe.save();
 
         res.json({comments: recipe.comments});
