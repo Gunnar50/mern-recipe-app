@@ -8,6 +8,7 @@ export default function Recipe() {
     const userID = window.localStorage.getItem("userID");
     const [recipe, setRecipe] = useState(null);
     const [currentUsername, setCurrentUsername] = useState("");
+    const [comment, setComment] = useState("");
     
     useEffect(() => {
         const getRecipe = async() => {
@@ -68,12 +69,26 @@ export default function Recipe() {
                         <p>{recipe.description}</p>
                     </div>
                 </div>
+                
+                <div>
+                    <h2 className="mt-5">Comments</h2>
+                    {/* comment form */}
 
-                <div className="d-flex justify-content-between mt-5">
-                    <h2 className="card-title">Comments</h2>
-                    {recipe.comments.map((comment) => {
-                        <p>Author: {comment.username}</p>
-                    })}
+                    <form>
+                        <div className="form-group">
+                            <textarea required={true} className="form-control" type="text" id="comment" name="comment" placeholder="Comment" onChange={(e) => setComment(e.target.value)} />
+                        </div>
+                        <button required={true} className="btn btn-primary" type="submit">Add comment</button>
+                    </form>
+
+                    <div className="mt-5">
+                        {recipe.comments.map((comment) => (
+                            <div className="card card-body ">
+                                <p className="card-subtitle text-muted">By {recipe.creator.username ? recipe.creator.username === currentUsername ? `${recipe.creator.username} (Me)` : recipe.creator.username : 'Unknown'}</p>
+                                <p className="card-text">{comment.comment}</p>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
             
