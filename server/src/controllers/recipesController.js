@@ -66,7 +66,7 @@ export const getRecipeID = async (req, res) => {
             }
         })
       .exec();
-      
+
       res.json({ recipe });
         
     } catch(err) {res.json(err);}
@@ -119,10 +119,8 @@ export const createComment = async (req, res) => {
         const recipe = await RecipeModel.findById(recipeID);
         recipe.comments.push(newComment);
         await recipe.save();
-
         res.json({comments: recipe.comments});
     } catch(err) {res.json(err);}
-
 }
 
 
