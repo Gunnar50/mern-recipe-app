@@ -9,16 +9,15 @@ export default function Recipe() {
     const [recipe, setRecipe] = useState(null);
     const [currentUsername, setCurrentUsername] = useState("");
     const [comment, setComment] = useState("");
+
+    const getRecipe = async() => {
+        try{
+            const response = await axios.get(`http://localhost:3001/recipes/get-recipe/${recipeID}`);
+            setRecipe(response.data.recipe);
+        }catch(err) {console.log(err);}
+    }
     
     useEffect(() => {
-        const getRecipe = async() => {
-            try{
-                const response = await axios.get(`http://localhost:3001/recipes/get-recipe/${recipeID}`);
-                console.log(response);
-                setRecipe(response.data.recipe);
-            }catch(err) {console.log(err);}
-        }
-
         const getCurrentUser = async () => {
             try {
                 if(userID){
@@ -31,7 +30,16 @@ export default function Recipe() {
 
         getCurrentUser();
         getRecipe();
-    }, [recipeID, userID])
+    }, [userID])
+
+    const submitComment = async() => {
+        try {
+            await axios.post(`http://localhost:3001/recipes/${recipeID}`, {
+                comment: comment, creator: userID
+            });
+            getRecipe();
+        } catch (err) {console.error(err);}
+    }
 
     if (!recipe) return null;
 
@@ -74,16 +82,16 @@ export default function Recipe() {
                     <h2 className="mt-5">Comments</h2>
                     {/* comment form */}
 
-                    <form>
+                    <form onSubmit={submitComment}>
                         <div className="form-group">
-                            <textarea required={true} className="form-control" type="text" id="comment" name="comment" placeholder="Comment" onChange={(e) => setComment(e.target.value)} />
+                            <textarea required={true} className="form-control" type="text" id="comment" name="comment" placeholder="Comment" value={comment} onChange={(e) => setComment(e.target.value)} />
                         </div>
                         <button required={true} className="btn btn-primary" type="submit">Add comment</button>
                     </form>
 
                     <div className="mt-5">
-                        {recipe.comments.map((comment) => (
-                            <div className="card card-body ">
+                        {recipe.comments.map((comment, index) => (
+                            <div key={index} className="card card-body mt-2">
                                 <p className="card-subtitle text-muted">By {recipe.creator.username ? recipe.creator.username === currentUsername ? `${recipe.creator.username} (Me)` : recipe.creator.username : 'Unknown'}</p>
                                 <p className="card-text">{comment.comment}</p>
                             </div>
