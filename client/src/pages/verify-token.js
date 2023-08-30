@@ -1,4 +1,4 @@
-
+import axios from "axios";
 
 export async function verifyToken(token) {
     try {
@@ -13,5 +13,6 @@ export async function verifyToken(token) {
         return true;
     } catch (err) {
         console.error(err);
+        return false;
     }
 } 

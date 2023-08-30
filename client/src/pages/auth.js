@@ -1,7 +1,8 @@
-import { useState } from "react";
 import axios from "axios";
-import {useCookies} from "react-cookie"
-import {useNavigate} from "react-router-dom"
+import { useState } from "react";
+import { useCookies } from "react-cookie";
+import { useNavigate } from "react-router-dom";
+import { verifyToken } from "./verify-token";
 
 
 export const Auth = () => {
@@ -21,21 +22,24 @@ const Login = () => {
     const onSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post("http://localhost:3001/auth/login", { username, password });
+            const response = await axios.post("http://localhost:3001/auth/login", 
+                { 
+                    username,
+                    password 
+                });
             
             const token = response.data.token;
             const userID = response.data.userID;
-
-            // Immediately verify token after successful login
-            const verifyResponse = await axios.get("http://localhost:3001/auth/verify-token", {
-                headers: { 'Authorization': token }
-            });
-
-            if (!verifyResponse.data.valid) {
-                console.log('Token verification failed!');
+            if(!token) {
+                console.log(response.data.message);
+                setUsername("");
+                setPassword("");   
                 return;
             }
 
+            // Immediately verify token after successful login
+            if(!verifyToken(token)) return;
+            
             setCookies("access_token", token);
             window.localStorage.setItem("userID", userID);
             navigate("/");
@@ -93,10 +97,10 @@ const Form = ({username, password, setUsername, setPassword, label, onSubmit}) =
         <form onSubmit={onSubmit}>
             <h2 className="card-title">{label}</h2>
             <div className="form-group">
-                <input className="form-control" type="text" id="username" placeholder="Username" onChange={(event) => setUsername(event.target.value)}/>
+                <input className="form-control" type="text" id="username" placeholder="Username" value={username} onChange={(event) => setUsername(event.target.value)}/>
             </div>
             <div className="form-group">
-                <input className="form-control" type="password" id="password" placeholder="Password" onChange={(event) => setPassword(event.target.value)}/>
+                <input className="form-control" type="password" id="password" placeholder="Password" value={password} onChange={(event) => setPassword(event.target.value)}/>
             </div>
             <button className="btn btn-primary" type="submit">{label}</button>
         </form>
