@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react"
 import axios from "axios";
-import {useCookies} from "react-cookie"
+import { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
+import API from "../api";
 
 export const Home = () => {
     const [recipes, setRecipes] = useState([]);
@@ -11,7 +12,7 @@ export const Home = () => {
 
     const fetchRecipes = async () => {
         try {
-            const response = await axios.get("http://localhost:3001/recipes");
+            const response = await API.get("/recipes");
             setRecipes(response.data);
             
         } catch (err) {console.error(err);}
@@ -21,7 +22,7 @@ export const Home = () => {
         const getCurrentUser = async () => {
             try {
                 if(userID){
-                    const response = await axios.get(`http://localhost:3001/auth/user/${userID}`);
+                    const response = await API.get(`/auth/user/${userID}`);
                     setCurrentUsername(response.data.username);
                 }
                 
@@ -30,7 +31,7 @@ export const Home = () => {
 
         const fetchVotedRecipes = async () => {
             try {
-                const response = await axios.get(`http://localhost:3001/recipes/get-recipes/${userID}`);
+                const response = await API.get(`/recipes/get-recipes/${userID}`);
                 setVotedRecipes(response.data.votedRecipes);
                 
             } catch (err) {console.error(err);}
@@ -43,7 +44,7 @@ export const Home = () => {
 
     const voteUp = async (recipeID) => {
         try {
-            const response = await axios.put("http://localhost:3001/recipes", {recipeID, userID})
+            const response = await API.put("/recipes", {recipeID, userID})
             setVotedRecipes(response.data.votedRecipes);
             fetchRecipes();
           

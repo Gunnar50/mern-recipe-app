@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import API from "../api/index.js";
-import { verifyToken } from "../utils/verify-token";
+// import { verifyToken } from "../utils/verify-token";
 
 
 export const Auth = () => {
