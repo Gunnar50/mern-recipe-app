@@ -1,6 +1,4 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
-import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import API from "../api";
 
@@ -11,7 +9,7 @@ export const MyRecipes = () => {
     const userID = window.localStorage.getItem("userID");
 
 
-    const getOwnRecipes = async () => {
+    async function getOwnRecipes() {
         try {
             const response = await API.get(`/recipes/${userID}`);
             setRecipes(response.data.recipes);
@@ -19,7 +17,7 @@ export const MyRecipes = () => {
         } catch (err) {console.error(err);}
     }
 
-    const getCurrentUser = async () => {
+    async function getCurrentUser() {
         try {
             if(userID){
                 const response = await API.get(`/auth/user/${userID}`);
@@ -32,7 +30,8 @@ export const MyRecipes = () => {
     useEffect(() => {
         getCurrentUser();
         getOwnRecipes();
-    });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const deleteRecipe = async(recipeID) => {
         try {

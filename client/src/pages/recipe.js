@@ -1,6 +1,6 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom"
+import { useParams } from "react-router-dom";
+import API from "../api";
 
 
 export default function Recipe() {
@@ -12,29 +12,29 @@ export default function Recipe() {
 
     const getRecipe = async() => {
         try{
-            const response = await axios.get(`http://localhost:3001/recipes/get-recipe/${recipeID}`);
+            const response = await API.get(`/recipes/get-recipe/${recipeID}`);
             setRecipe(response.data.recipe);
         }catch(err) {console.log(err);}
     }
+
+    const getCurrentUser = async () => {
+        try {
+            if(userID){
+                const response = await API.get(`/auth/user/${userID}`);
+                setCurrentUsername(response.data.username);
+            }
+            
+        } catch (err) {console.error(err);}
+    }
     
     useEffect(() => {
-        const getCurrentUser = async () => {
-            try {
-                if(userID){
-                    const response = await axios.get(`http://localhost:3001/auth/user/${userID}`);
-                    setCurrentUsername(response.data.username);
-                }
-                
-            } catch (err) {console.error(err);}
-        }
-
         getCurrentUser();
         getRecipe();
-    }, [userID])
+    })
 
     const submitComment = async() => {
         try {
-            await axios.post(`http://localhost:3001/recipes/${recipeID}`, {
+            await API.post(`/recipes/${recipeID}`, {
                 comment: comment, creator: userID
             });
             getRecipe();
