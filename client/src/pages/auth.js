@@ -2,14 +2,17 @@ import axios from "axios";
 import { useState } from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
-import { verifyToken } from "./verify-token";
+import API from "../api/index.js";
+import { verifyToken } from "../utils/verify-token";
 
 
 export const Auth = () => {
-    return <div className="row justify-content-center mt-4">
+    return (
+    <div className="row justify-content-center mt-4">
         <Login />
         <Register />
     </div>
+    )
 };
 
 
@@ -22,25 +25,27 @@ const Login = () => {
     const onSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post("http://localhost:3001/auth/login", 
+            const response = await API.post("/auth/login", 
                 { 
                     username,
                     password 
                 });
-            
             const token = response.data.token;
             const userID = response.data.userID;
+            console.log(token);
+            
             if(!token) {
                 console.log(response.data.message);
                 setUsername("");
-                setPassword("");   
+                setPassword("");
+                alert("Incorrect username or password");   
                 return;
             }
 
             // Immediately verify token after successful login
-            if(!verifyToken(token)) return;
+            // if(!verifyToken(token)) return;
             
-            setCookies("access_token", token);
+            setCookies("access_token", `Bearer ${token}`);
             window.localStorage.setItem("userID", userID);
             navigate("/");
 
