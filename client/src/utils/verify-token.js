@@ -4,7 +4,7 @@ export async function verifyToken(token) {
     try {
         const verifyResponse = await axios.get("http://localhost:3001/auth/verify-token", 
             {
-                headers: { authorization: token }
+                headers: { authorization: `Bearer ${token}` }
             });
         if (!verifyResponse.data.valid) {
             console.log("Token verification failed!");
