@@ -1,7 +1,8 @@
-import { useState } from "react"
 import axios from "axios";
-import {useNavigate} from "react-router-dom"
-import {useCookies} from "react-cookie";
+import { useState } from "react";
+import { useCookies } from "react-cookie";
+import { useNavigate } from "react-router-dom";
+import API from "../api";
 
 export const Create = () => {
     const [cookies, ] = useCookies(["access_token"]);
@@ -47,9 +48,7 @@ export const Create = () => {
         }
 
         try {
-            await axios.post("http://localhost:3001/recipes/create", recipe, {
-                headers: {"Authorization": cookies.access_token}
-            });
+            await API.post("/recipes/create", recipe);
             alert("Recipe Created!");
             navigate("/");
         } catch (err) {console.error(err);}
