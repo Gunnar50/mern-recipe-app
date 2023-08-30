@@ -1,8 +1,9 @@
-import { Link, useNavigate } from 'react-router-dom';
-import './navbar.css';
-import {useCookies} from "react-cookie";
-import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { useCookies } from "react-cookie";
+import { Link, useNavigate } from 'react-router-dom';
+import API from '../api';
+import './navbar.css';
 
 export const NavBar = () => {
     const [cookies, setCookies] = useCookies(["access_token"]);
@@ -12,11 +13,7 @@ export const NavBar = () => {
     useEffect(() => {
         const verifyAccess = async () => {
             try {
-                const response = await axios.get('http://localhost:3001/auth/verify-token', {
-                    headers: {
-                        'Authorization': cookies.access_token
-                    }
-                });
+                const response = await API.get('/auth/verify-token');
                 if(response.data.valid) {
                     setIsAuthenticated(true);
                 } else {

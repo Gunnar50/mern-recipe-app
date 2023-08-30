@@ -44,7 +44,7 @@ const Login = () => {
             // Immediately verify token after successful login
             // if(!verifyToken(token)) return;
             
-            setCookies("access_token", `Bearer ${token}`);
+            setCookies("access_token", token);
             window.localStorage.setItem("userID", userID);
             navigate("/");
 
