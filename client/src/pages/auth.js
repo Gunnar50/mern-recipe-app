@@ -32,7 +32,6 @@ const Login = () => {
                 });
             const token = response.data.token;
             const userID = response.data.userID;
-            console.log(token);
             
             if(!token) {
                 console.log(response.data.message);
