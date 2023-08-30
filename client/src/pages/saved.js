@@ -1,38 +1,35 @@
-import { useEffect, useState } from "react"
-import axios from "axios";
-import {useCookies} from "react-cookie"
+import { useEffect, useState } from "react";
+import API from "../api";
 
 export const Saved = () => {
     const [votedRecipes, setVotedRecipes] = useState([]);
     const [currentUsername, setCurrentUsername] = useState("");
-    const [cookies, ] = useCookies(["access_token"])
     const userID = window.localStorage.getItem("userID");
+
+    async function fetchVotedRecipes () {
+        try {
+            const response = await API.get(`/recipes/get-voted-recipes/${userID}`);
+            setVotedRecipes(response.data.votedRecipes);
+            
+        } catch (err) {console.error(err);}
+    }
+    
+    async function getCurrentUser () {
+        try {
+            if(userID){
+                const response = await API.get(`/auth/user/${userID}`);
+                setCurrentUsername(response.data.username);
+            }
+            
+        } catch (err) {console.error(err);}
+    }
 
 
     useEffect(() => {
-        const fetchVotedRecipes = async () => {
-            try {
-                const response = await axios.get(`http://localhost:3001/recipes/get-voted-recipes/${userID}`);
-                setVotedRecipes(response.data.votedRecipes);
-                
-            } catch (err) {console.error(err);}
-        }
-        
-        const getCurrentUser = async () => {
-            try {
-                if(userID){
-                    const response = await axios.get(`http://localhost:3001/auth/user/${userID}`);
-                    setCurrentUsername(response.data.username);
-                }
-                
-            } catch (err) {console.error(err);}
-        }
-
         getCurrentUser();
-        if(cookies.access_token) fetchVotedRecipes();
-    }, [cookies.access_token, userID])
+        fetchVotedRecipes();
+    });
 
-    
 
     return (
         <div className="row justify-content-center mt-4">
