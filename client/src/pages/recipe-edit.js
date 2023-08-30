@@ -1,12 +1,9 @@
-import { useState, useEffect } from "react"
-import axios from "axios";
-import {useNavigate} from "react-router-dom"
-import {useCookies} from "react-cookie";
-import { useParams } from "react-router-dom"
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import API from "../api";
 
 export const Edit = () => {
     const {recipeID} = useParams();
-    const [cookies, ] = useCookies(["access_token"]);
     const navigate = useNavigate();
     const [recipe, setRecipe] = useState({
         name: "",
@@ -22,7 +19,7 @@ export const Edit = () => {
     useEffect(() => {
         const getRecipe = async() => {
             try{
-                const response = await axios.get(`http://localhost:3001/recipes/get-recipe/${recipeID}`);
+                const response = await API.get(`/recipes/get-recipe/${recipeID}`);
                 setRecipe(response.data.recipe);
             }catch(err) {console.log(err);}
         }
@@ -61,9 +58,7 @@ export const Edit = () => {
         }
 
         try {
-            await axios.put(`http://localhost:3001/recipes/update/${recipeID}`, recipe, {
-                headers: {"Authorization": cookies.access_token}
-            });
+            await API.put(`/recipes/update/${recipeID}`, recipe);
             alert("Recipe Updated!");
             navigate("/my-recipes");
         } catch (err) {console.error(err);}
