@@ -1,13 +1,16 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useCookies } from "react-cookie";
 import { Link, useNavigate } from 'react-router-dom';
 import API from '../api';
+import { UserContext } from '../contexts/Context';
 import './navbar.css';
+
 
 export const NavBar = () => {
     const [cookies, setCookies] = useCookies(["access_token"]);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const navigate = useNavigate();
+    const [user, setUser] = useState(UserContext);
 
     useEffect(() => {
         const verifyAccess = async () => {
