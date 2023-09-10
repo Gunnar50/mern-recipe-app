@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import API from "../api";
+import { UserContext } from '../contexts/Context';
 
 export const Home = () => {
     const [recipes, setRecipes] = useState([]);
     const [votedRecipes, setVotedRecipes] = useState([]);
-    const [currentUsername, setCurrentUsername] = useState("");
-    const userID = window.localStorage.getItem("userID");
+    const {userID, currentUsername} = useContext(UserContext);
 
     const fetchRecipes = async () => {
         try {
@@ -16,16 +16,6 @@ export const Home = () => {
     }
 
     useEffect(() => {
-        const getCurrentUser = async () => {
-            try {
-                if(userID){
-                    const response = await API.get(`/auth/user/${userID}`);
-                    setCurrentUsername(response.data.username);
-                }
-                
-            } catch (err) {console.error(err);}
-        }
-
         const fetchVotedRecipes = async () => {
             try {
                 const response = await API.get(`/recipes/get-recipes/${userID}`);
@@ -35,7 +25,6 @@ export const Home = () => {
         }
 
         fetchRecipes();
-        getCurrentUser();
         fetchVotedRecipes();
     }, [userID])
 
@@ -51,7 +40,6 @@ export const Home = () => {
     }
 
     const isRecipeVoted = (recipeID) => Array.isArray(votedRecipes) && votedRecipes.includes(recipeID);
-
 
     return (
         <div className="row justify-content-center mt-4">
