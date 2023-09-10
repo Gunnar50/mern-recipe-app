@@ -9,6 +9,7 @@ import { MyRecipes } from './pages/my-recipes';
 import Recipe from './pages/recipe';
 import { Edit } from './pages/recipe-edit';
 import { Saved } from "./pages/saved";
+import { ProtectedRoutes } from "./utils/ProtectedRoutes";
 
 
 function App() {
@@ -18,13 +19,15 @@ function App() {
 			<BrowserRouter>
 				<NavBar/>
 				<Routes>
-					<Route path='/' element={<Home/>} />
+					<Route path='/' element={<Home/>} exact />
 					<Route path='/auth' element={<Auth/>} />
-					<Route path='/create' element={<Create />} />
-					<Route path='/saved' element={<Saved/>} />
-					<Route path='/my-recipes' element={<MyRecipes/>} />
-					<Route path='/recipe/:recipeID' element={<Recipe/>} />
+					<Route element={<ProtectedRoutes/>}>
+						<Route path='/create' element={<Create />} />
+						<Route path='/saved' element={<Saved/>} />
+						<Route path='/my-recipes' element={<MyRecipes/>} />
+						<Route path='/recipe/:recipeID' element={<Recipe/>} />
 					<Route path='/my-recipes/:recipeID' element={<Edit/>} />
+					</Route>
 				</Routes>
 			</BrowserRouter>
 		</UserContextProvider>
