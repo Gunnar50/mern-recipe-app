@@ -1,16 +1,18 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../api";
+import { UserContext } from '../contexts/Context';
 
 export const Create = () => {
     const navigate = useNavigate();
+    const {userID} = useContext(UserContext);
     const [recipe, setRecipe] = useState({
         name: "",
         ingredients: [],
         description: "",
         image: "",
         cookingTime: 0,
-        creator: window.localStorage.getItem("userID"),
+        creator: userID,
     });
 
     const [ingredientInput, setIngredientInput] = useState("");
