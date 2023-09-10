@@ -1,20 +1,19 @@
-import { useState, useEffect } from "react"
-import axios from "axios";
-import {useNavigate} from "react-router-dom"
-import {useCookies} from "react-cookie";
-import { useParams } from "react-router-dom"
+import { useContext, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import API from "../api";
+import { UserContext } from '../contexts/Context';
 
 export const Edit = () => {
     const {recipeID} = useParams();
-    const [cookies, ] = useCookies(["access_token"]);
     const navigate = useNavigate();
+    const {userID} = useContext(UserContext);
     const [recipe, setRecipe] = useState({
         name: "",
         ingredients: [],
         description: "",
         image: "",
         cookingTime: 0,
-        creator: window.localStorage.getItem("userID"),
+        creator: userID,
     });
 
     const [ingredientInput, setIngredientInput] = useState("");
@@ -22,7 +21,7 @@ export const Edit = () => {
     useEffect(() => {
         const getRecipe = async() => {
             try{
-                const response = await axios.get(`http://localhost:3001/recipes/get-recipe/${recipeID}`);
+                const response = await API.get(`/recipes/get-recipe/${recipeID}`);
                 setRecipe(response.data.recipe);
             }catch(err) {console.log(err);}
         }
@@ -61,9 +60,7 @@ export const Edit = () => {
         }
 
         try {
-            await axios.put(`http://localhost:3001/recipes/update/${recipeID}`, recipe, {
-                headers: {"Authorization": cookies.access_token}
-            });
+            await API.put(`/recipes/update/${recipeID}`, recipe);
             alert("Recipe Updated!");
             navigate("/my-recipes");
         } catch (err) {console.error(err);}

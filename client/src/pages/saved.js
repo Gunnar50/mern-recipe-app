@@ -1,38 +1,23 @@
-import { useEffect, useState } from "react"
-import axios from "axios";
-import {useCookies} from "react-cookie"
+import { useContext, useEffect, useState } from "react";
+import API from "../api";
+import { UserContext } from '../contexts/Context';
 
 export const Saved = () => {
     const [votedRecipes, setVotedRecipes] = useState([]);
-    const [currentUsername, setCurrentUsername] = useState("");
-    const [cookies, ] = useCookies(["access_token"])
-    const userID = window.localStorage.getItem("userID");
+    const {userID, currentUsername} = useContext(UserContext);
 
+    async function fetchVotedRecipes () {
+        try {
+            const response = await API.get(`/recipes/get-voted-recipes/${userID}`);
+            setVotedRecipes(response.data.votedRecipes);
+            
+        } catch (err) {console.error(err);}
+    }
 
     useEffect(() => {
-        const fetchVotedRecipes = async () => {
-            try {
-                const response = await axios.get(`http://localhost:3001/recipes/get-voted-recipes/${userID}`);
-                setVotedRecipes(response.data.votedRecipes);
-                
-            } catch (err) {console.error(err);}
-        }
-        
-        const getCurrentUser = async () => {
-            try {
-                if(userID){
-                    const response = await axios.get(`http://localhost:3001/auth/user/${userID}`);
-                    setCurrentUsername(response.data.username);
-                }
-                
-            } catch (err) {console.error(err);}
-        }
+        fetchVotedRecipes();
+    });
 
-        getCurrentUser();
-        if(cookies.access_token) fetchVotedRecipes();
-    }, [cookies.access_token, userID])
-
-    
 
     return (
         <div className="row justify-content-center mt-4">
@@ -49,7 +34,7 @@ export const Saved = () => {
                             <h2 className="card-title">{item.name}</h2>
                             <p>Cooking Time: {item.cookingTime} minutes</p>
                             <h6>Author: {item.creator.username ? item.creator.username === currentUsername ? `${item.creator.username} (Me)` : item.creator.username : 'Unknown'}</h6>
-                            <a href="/your-recipe-link">View Recipe</a>
+                            <a href={`/recipe/${item._id}`}>View Recipe</a>
                         </div>
 
                         

@@ -1,49 +1,37 @@
-import { useEffect, useState } from "react"
-import axios from "axios";
-import {useCookies} from "react-cookie"
+import { useContext, useEffect, useState } from "react";
+import API from "../api";
+import { UserContext } from '../contexts/Context';
 
 export const Home = () => {
     const [recipes, setRecipes] = useState([]);
     const [votedRecipes, setVotedRecipes] = useState([]);
-    const [currentUsername, setCurrentUsername] = useState("");
-    const [cookies, ] = useCookies(["access_token"])
-    const userID = window.localStorage.getItem("userID");
+    const {userID, currentUsername} = useContext(UserContext);
 
     const fetchRecipes = async () => {
         try {
-            const response = await axios.get("http://localhost:3001/recipes");
+            const response = await API.get("/recipes");
             setRecipes(response.data);
             
         } catch (err) {console.error(err);}
     }
 
     useEffect(() => {
-        const getCurrentUser = async () => {
-            try {
-                if(userID){
-                    const response = await axios.get(`http://localhost:3001/auth/user/${userID}`);
-                    setCurrentUsername(response.data.username);
-                }
-                
-            } catch (err) {console.error(err);}
-        }
-
         const fetchVotedRecipes = async () => {
             try {
-                const response = await axios.get(`http://localhost:3001/recipes/get-recipes/${userID}`);
+                const response = await API.get(`/recipes/get-recipes/${userID}`);
                 setVotedRecipes(response.data.votedRecipes);
                 
             } catch (err) {console.error(err);}
         }
 
         fetchRecipes();
-        getCurrentUser();
-        if(cookies.access_token) fetchVotedRecipes();
-    }, [cookies.access_token, userID])
+        fetchVotedRecipes();
+    }, [userID])
 
-    const voteUp = async (recipeID) => {
+    const voteUp = async (e, recipeID) => {
+        e.preventDefault();
         try {
-            const response = await axios.put("http://localhost:3001/recipes", {recipeID, userID})
+            const response = await API.put("/recipes", {recipeID, userID});
             setVotedRecipes(response.data.votedRecipes);
             fetchRecipes();
           
@@ -53,10 +41,9 @@ export const Home = () => {
 
     const isRecipeVoted = (recipeID) => Array.isArray(votedRecipes) && votedRecipes.includes(recipeID);
 
-
     return (
         <div className="row justify-content-center mt-4">
-            {recipes.map((item, idx) => (
+            {recipes.map((item) => (
                 <div key={item._id} className="col-md-10 card card-body p-2 mb-2">
                     <div className="d-flex justify-content-between align-items-center">
                         {/* Image on the left side */}
@@ -76,8 +63,8 @@ export const Home = () => {
                         <div className="d-flex flex-column align-items-center mr-5">
                             
                                 <i 
-                                    onClick={() => {if(!isRecipeVoted(item._id)) voteUp(item._id)}} style={{color: isRecipeVoted(item._id) ? "blue" : "grey" }}
-                                    className={`fas fa-thumbs-up fa-2x mb-2 link-like ${(isRecipeVoted(item._id) || !cookies.access_token) && "disabled"}`}></i>
+                                    onClick={(e) => {if(!isRecipeVoted(item._id)) voteUp(e, item._id)}} style={{color: isRecipeVoted(item._id) ? "blue" : "grey" }}
+                                    className={`fas fa-thumbs-up fa-2x mb-2 link-like ${(isRecipeVoted(item._id) || !userID) && "disabled"}`}></i>
                        
                             <span>{item.votes} votes</span>
                         </div>

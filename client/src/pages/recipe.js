@@ -1,36 +1,34 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom"
+import { useContext, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import API from "../api";
+import { UserContext } from '../contexts/Context';
 
 
 export default function Recipe() {
     const {recipeID} = useParams();
     const [recipe, setRecipe] = useState(null);
-    const [currentUsername, setCurrentUsername] = useState("");
-    const userID = window.localStorage.getItem("userID");
+    const [comment, setComment] = useState("");
+    const {userID, currentUsername} = useContext(UserContext);
+
+    const getRecipe = async() => {
+        try{
+            const response = await API.get(`/recipes/get-recipe/${recipeID}`);
+            setRecipe(response.data.recipe);
+        }catch(err) {console.log(err);}
+    }
     
     useEffect(() => {
-        const getRecipe = async() => {
-            try{
-                const response = await axios.get(`http://localhost:3001/recipes/get-recipe/${recipeID}`);
-                console.log(response);
-                setRecipe(response.data.recipe);
-            }catch(err) {console.log(err);}
-        }
-
-        const getCurrentUser = async () => {
-            try {
-                if(userID){
-                    const response = await axios.get(`http://localhost:3001/auth/user/${userID}`);
-                    setCurrentUsername(response.data.username);
-                }
-                
-            } catch (err) {console.error(err);}
-        }
-
-        getCurrentUser();
         getRecipe();
-    }, [recipeID, userID])
+    })
+
+    const submitComment = async() => {
+        try {
+            await API.post(`/recipes/${recipeID}`, {
+                comment: comment, creator: userID
+            });
+            getRecipe();
+        } catch (err) {console.error(err);}
+    }
 
     if (!recipe) return null;
 
@@ -68,8 +66,31 @@ export default function Recipe() {
                         <p>{recipe.description}</p>
                     </div>
                 </div>
+                
+                <div>
+                    <h2 className="mt-5">Comments</h2>
+                    {/* comment form */}
+
+                    <form onSubmit={submitComment}>
+                        <div className="form-group">
+                            <textarea required={true} className="form-control" type="text" id="comment" name="comment" placeholder="Comment" value={comment} onChange={(e) => setComment(e.target.value)} />
+                        </div>
+                        <button required={true} className="btn btn-primary" type="submit">Add comment</button>
+                    </form>
+
+                    <div className="mt-5">
+                        {recipe.comments.map((comment, index) => (
+                            <div key={index} className="card card-body mt-2">
+                                <p className="card-subtitle text-muted">By {recipe.creator.username ? recipe.creator.username === currentUsername ? `${recipe.creator.username} (Me)` : recipe.creator.username : 'Unknown'}</p>
+                                <p className="card-text">{comment.comment}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
             </div>
             
+        
+
         </div>
     )
 }

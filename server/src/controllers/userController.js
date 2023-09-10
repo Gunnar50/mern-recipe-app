@@ -1,5 +1,5 @@
-import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import { UserModel } from "../models/Users.js";
 
 export const registerUser = async (req, res) => {
@@ -27,7 +27,7 @@ export const loginUser = async (req, res) => {
     if (!isPasswordValid) return res.json({ message: "Username or Password is incorrect!" });
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-    res.json({ token: token, userID: user._id });
+    res.json({ userID: user.id, username: user.username, token: token });
 };
 
 export const getCurrentUser = async (req, res) => {

@@ -1,43 +1,30 @@
-import { useEffect, useState } from "react"
-import axios from "axios";
-import {useCookies} from "react-cookie"
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import API from "../api";
+import { UserContext } from '../contexts/Context';
 
 export const MyRecipes = () => {
     const [recipes, setRecipes] = useState([]);
     const navigate = useNavigate();
-    const [currentUsername, setCurrentUsername] = useState("");
-    const [cookies, ] = useCookies(["access_token"])
-    const userID = window.localStorage.getItem("userID");
+    const {userID, currentUsername} = useContext(UserContext);
 
 
-    const getOwnRecipes = async () => {
+    async function getOwnRecipes() {
         try {
-            const response = await axios.get(`http://localhost:3001/recipes/${userID}`);
+            const response = await API.get(`/recipes/${userID}`);
             setRecipes(response.data.recipes);
             
         } catch (err) {console.error(err);}
     }
 
-
     useEffect(() => {
-        const getCurrentUser = async () => {
-            try {
-                if(userID){
-                    const response = await axios.get(`http://localhost:3001/auth/user/${userID}`);
-                    setCurrentUsername(response.data.username);
-                }
-                
-            } catch (err) {console.error(err);}
-        }
-
-        getCurrentUser();
-        if(cookies.access_token) getOwnRecipes();
-    }, [cookies.access_token, userID])
+        getOwnRecipes();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const deleteRecipe = async(recipeID) => {
         try {
-            await axios.delete(`http://localhost:3001/recipes/del/${recipeID}`)
+            await API.delete(`/recipes/del/${recipeID}`)
             getOwnRecipes();
         } catch (error) {
             console.log(error);

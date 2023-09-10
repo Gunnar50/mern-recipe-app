@@ -1,18 +1,18 @@
-import { useState } from "react"
-import axios from "axios";
-import {useNavigate} from "react-router-dom"
-import {useCookies} from "react-cookie";
+import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import API from "../api";
+import { UserContext } from '../contexts/Context';
 
 export const Create = () => {
-    const [cookies, ] = useCookies(["access_token"]);
     const navigate = useNavigate();
+    const {userID} = useContext(UserContext);
     const [recipe, setRecipe] = useState({
         name: "",
         ingredients: [],
         description: "",
         image: "",
         cookingTime: 0,
-        creator: window.localStorage.getItem("userID"),
+        creator: userID,
     });
 
     const [ingredientInput, setIngredientInput] = useState("");
@@ -47,9 +47,7 @@ export const Create = () => {
         }
 
         try {
-            await axios.post("http://localhost:3001/recipes/create", recipe, {
-                headers: {"Authorization": cookies.access_token}
-            });
+            await API.post("/recipes/create", recipe);
             alert("Recipe Created!");
             navigate("/");
         } catch (err) {console.error(err);}

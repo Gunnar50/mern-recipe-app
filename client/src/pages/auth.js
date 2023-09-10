@@ -1,14 +1,17 @@
-import { useState } from "react";
-import axios from "axios";
-import {useCookies} from "react-cookie"
-import {useNavigate} from "react-router-dom"
+
+import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import API from "../api/index.js";
+import { UserContext } from '../contexts/Context';
 
 
 export const Auth = () => {
-    return <div className="row justify-content-center mt-4">
+    return (
+    <div className="row justify-content-center mt-4">
         <Login />
         <Register />
     </div>
+    )
 };
 
 
@@ -16,28 +19,30 @@ const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
-    const [, setCookies] = useCookies(["access_token"])
+    const {login} = useContext(UserContext);
 
     const onSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post("http://localhost:3001/auth/login", { username, password });
-            
-            const token = response.data.token;
+            const response = await API.post("/auth/login", 
+                { 
+                    username,
+                    password 
+                });
             const userID = response.data.userID;
-
-            // Immediately verify token after successful login
-            const verifyResponse = await axios.get("http://localhost:3001/auth/verify-token", {
-                headers: { 'Authorization': token }
-            });
-
-            if (!verifyResponse.data.valid) {
-                console.log('Token verification failed!');
+            const currentUsername = response.data.username;
+            const token = response.data.token;
+            
+            if(!token) {
+                console.log(response.data.message);
+                setUsername("");
+                setPassword("");
+                alert("Incorrect username or password");   
                 return;
             }
-
-            setCookies("access_token", token);
-            window.localStorage.setItem("userID", userID);
+            
+            login(userID, currentUsername, token);
+            
             navigate("/");
 
         } catch (err) {
@@ -68,7 +73,7 @@ const Register = () => {
     const onSubmit = async (event) => {
         event.preventDefault();
         try {
-            await axios.post("http://localhost:3001/auth/register", {username, password});
+            await API.post("/auth/register", {username, password});
             alert("Registration Complete!");
         } catch (err) {console.error(err);}
 
@@ -93,10 +98,10 @@ const Form = ({username, password, setUsername, setPassword, label, onSubmit}) =
         <form onSubmit={onSubmit}>
             <h2 className="card-title">{label}</h2>
             <div className="form-group">
-                <input className="form-control" type="text" id="username" placeholder="Username" onChange={(event) => setUsername(event.target.value)}/>
+                <input className="form-control" type="text" id="username" placeholder="Username" value={username} onChange={(event) => setUsername(event.target.value)}/>
             </div>
             <div className="form-group">
-                <input className="form-control" type="password" id="password" placeholder="Password" onChange={(event) => setPassword(event.target.value)}/>
+                <input className="form-control" type="password" id="password" placeholder="Password" value={password} onChange={(event) => setPassword(event.target.value)}/>
             </div>
             <button className="btn btn-primary" type="submit">{label}</button>
         </form>
