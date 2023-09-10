@@ -1,40 +1,15 @@
-import { useContext, useEffect, useState } from 'react';
-import { useCookies } from "react-cookie";
+import { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import API from '../api';
 import { UserContext } from '../contexts/Context';
 import './navbar.css';
 
 
 export const NavBar = () => {
-    const [cookies, setCookies] = useCookies(["access_token"]);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
     const navigate = useNavigate();
-    const [user, setUser] = useState(UserContext);
-
-    useEffect(() => {
-        const verifyAccess = async () => {
-            try {
-                const response = await API.get('/auth/verify-token');
-                if(response.data.valid) {
-                    setIsAuthenticated(true);
-                } else {
-                    setIsAuthenticated(false);
-                }
-            } catch(error) {
-                console.log(error);
-                setIsAuthenticated(false);
-            }
-        }
-        if(cookies.access_token) {
-            verifyAccess();
-        }
-    }, [cookies.access_token]);
+    const {userID, logout} = useContext(UserContext);
 
     const Logout = () => {
-        setCookies("access_token", "");
-        window.localStorage.removeItem("userID");
-        setIsAuthenticated(false);
+        logout();
         navigate("/");
     }
 
@@ -44,7 +19,7 @@ export const NavBar = () => {
 
             <div className="collapse navbar-collapse justify-content-end">
                 <div className="navbar-nav">
-                    {!isAuthenticated ? 
+                    {!userID ? 
                         (<Link className="nav-item nav-link btn btn-outline-secondary" to="/auth">Login/Register</Link>)
                      : 
                         <>

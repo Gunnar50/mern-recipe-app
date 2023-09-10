@@ -1,9 +1,8 @@
-import axios from "axios";
-import { useState } from "react";
-import { useCookies } from "react-cookie";
+
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../api/index.js";
-// import { verifyToken } from "../utils/verify-token";
+import { UserContext } from '../contexts/Context';
 
 
 export const Auth = () => {
@@ -20,7 +19,7 @@ const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
-    const [, setCookies] = useCookies(["access_token"])
+    const {login} = useContext(UserContext);
 
     const onSubmit = async (event) => {
         event.preventDefault();
@@ -30,8 +29,9 @@ const Login = () => {
                     username,
                     password 
                 });
-            const token = response.data.token;
             const userID = response.data.userID;
+            const currentUsername = response.data.username;
+            const token = response.data.token;
             
             if(!token) {
                 console.log(response.data.message);
@@ -40,12 +40,9 @@ const Login = () => {
                 alert("Incorrect username or password");   
                 return;
             }
-
-            // Immediately verify token after successful login
-            // if(!verifyToken(token)) return;
             
-            setCookies("access_token", token);
-            window.localStorage.setItem("userID", userID);
+            login(userID, currentUsername, token);
+            
             navigate("/");
 
         } catch (err) {
@@ -76,7 +73,7 @@ const Register = () => {
     const onSubmit = async (event) => {
         event.preventDefault();
         try {
-            await axios.post("http://localhost:3001/auth/register", {username, password});
+            await API.post("/auth/register", {username, password});
             alert("Registration Complete!");
         } catch (err) {console.error(err);}
 
