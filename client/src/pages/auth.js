@@ -98,10 +98,10 @@ const Form = ({username, password, setUsername, setPassword, label, onSubmit}) =
         <form onSubmit={onSubmit}>
             <h2 className="card-title">{label}</h2>
             <div className="form-group">
-                <input className="form-control" type="text" id="username" placeholder="Username" value={username} onChange={(event) => setUsername(event.target.value)}/>
+                <input className="form-control" type="text" placeholder="Username" value={username} onChange={(event) => setUsername(event.target.value)}/>
             </div>
             <div className="form-group">
-                <input className="form-control" type="password" id="password" placeholder="Password" value={password} onChange={(event) => setPassword(event.target.value)}/>
+                <input className="form-control" type="password" placeholder="Password" value={password} onChange={(event) => setPassword(event.target.value)}/>
             </div>
             <button className="btn btn-primary" type="submit">{label}</button>
         </form>
