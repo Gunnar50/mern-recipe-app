@@ -6,7 +6,7 @@ import './navbar.css';
 
 export const NavBar = () => {
     const navigate = useNavigate();
-    const {userID, logout} = useContext(UserContext);
+    const {user, logout} = useContext(UserContext);
 
     const Logout = () => {
         logout();
@@ -19,7 +19,7 @@ export const NavBar = () => {
 
             <div className="collapse navbar-collapse justify-content-end">
                 <div className="navbar-nav">
-                    {!userID ? 
+                    {!user.id ? 
                         (<Link className="nav-item nav-link btn btn-outline-secondary" to="/auth">Login/Register</Link>)
                      : 
                         <>
