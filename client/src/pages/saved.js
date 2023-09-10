@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import API from "../api";
+import { UserContext } from '../contexts/Context';
 
 export const Saved = () => {
     const [votedRecipes, setVotedRecipes] = useState([]);
-    const [currentUsername, setCurrentUsername] = useState("");
-    const userID = window.localStorage.getItem("userID");
+    const {userID, currentUsername} = useContext(UserContext);
 
     async function fetchVotedRecipes () {
         try {
@@ -13,20 +13,8 @@ export const Saved = () => {
             
         } catch (err) {console.error(err);}
     }
-    
-    async function getCurrentUser () {
-        try {
-            if(userID){
-                const response = await API.get(`/auth/user/${userID}`);
-                setCurrentUsername(response.data.username);
-            }
-            
-        } catch (err) {console.error(err);}
-    }
-
 
     useEffect(() => {
-        getCurrentUser();
         fetchVotedRecipes();
     });
 
@@ -46,7 +34,7 @@ export const Saved = () => {
                             <h2 className="card-title">{item.name}</h2>
                             <p>Cooking Time: {item.cookingTime} minutes</p>
                             <h6>Author: {item.creator.username ? item.creator.username === currentUsername ? `${item.creator.username} (Me)` : item.creator.username : 'Unknown'}</h6>
-                            <a href="/your-recipe-link">View Recipe</a>
+                            <a href={`/recipe/${item._id}`}>View Recipe</a>
                         </div>
 
                         
