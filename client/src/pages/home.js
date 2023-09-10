@@ -5,7 +5,7 @@ import { UserContext } from '../contexts/Context';
 export const Home = () => {
     const [recipes, setRecipes] = useState([]);
     const [votedRecipes, setVotedRecipes] = useState([]);
-    const {userID, currentUsername} = useContext(UserContext);
+    const {user} = useContext(UserContext);
 
     const fetchRecipes = async () => {
         try {
@@ -18,7 +18,7 @@ export const Home = () => {
     useEffect(() => {
         const fetchVotedRecipes = async () => {
             try {
-                const response = await API.get(`/recipes/get-recipes/${userID}`);
+                const response = await API.get(`/recipes/get-recipes/${user.id}`);
                 setVotedRecipes(response.data.votedRecipes);
                 
             } catch (err) {console.error(err);}
@@ -26,12 +26,12 @@ export const Home = () => {
 
         fetchRecipes();
         fetchVotedRecipes();
-    }, [userID])
+    }, [user.id])
 
     const voteUp = async (e, recipeID) => {
         e.preventDefault();
         try {
-            const response = await API.put("/recipes", {recipeID, userID});
+            const response = await API.put("/recipes", {recipeID, userID: user.id});
             setVotedRecipes(response.data.votedRecipes);
             fetchRecipes();
           
@@ -55,7 +55,7 @@ export const Home = () => {
                         <div style={{ flex: 2, margin: '0 20px' }}>
                             <h2 className="card-title">{item.name}</h2>
                             <p>Cooking Time: {item.cookingTime} minutes</p>
-                            <h6>Author: {item.creator.username ? item.creator.username === currentUsername ? `${item.creator.username} (Me)` : item.creator.username : 'Unknown'}</h6>
+                            <h6>Author: {item.creator.username ? item.creator.username === user.currentUsername ? `${item.creator.username} (Me)` : item.creator.username : 'Unknown'}</h6>
                             <a href={`/recipe/${item._id}`}>View Recipe</a>
                         </div>
 
@@ -64,7 +64,7 @@ export const Home = () => {
                             
                                 <i 
                                     onClick={(e) => {if(!isRecipeVoted(item._id)) voteUp(e, item._id)}} style={{color: isRecipeVoted(item._id) ? "blue" : "grey" }}
-                                    className={`fas fa-thumbs-up fa-2x mb-2 link-like ${(isRecipeVoted(item._id) || !userID) && "disabled"}`}></i>
+                                    className={`fas fa-thumbs-up fa-2x mb-2 link-like ${(isRecipeVoted(item._id) || !user.id) && "disabled"}`}></i>
                        
                             <span>{item.votes} votes</span>
                         </div>
