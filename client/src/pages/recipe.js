@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import API from "../api";
+import { UserContext } from '../contexts/Context';
 
 
 export default function Recipe() {
     const {recipeID} = useParams();
-    const userID = window.localStorage.getItem("userID");
     const [recipe, setRecipe] = useState(null);
-    const [currentUsername, setCurrentUsername] = useState("");
     const [comment, setComment] = useState("");
+    const {userID, currentUsername} = useContext(UserContext);
 
     const getRecipe = async() => {
         try{
@@ -16,19 +16,8 @@ export default function Recipe() {
             setRecipe(response.data.recipe);
         }catch(err) {console.log(err);}
     }
-
-    const getCurrentUser = async () => {
-        try {
-            if(userID){
-                const response = await API.get(`/auth/user/${userID}`);
-                setCurrentUsername(response.data.username);
-            }
-            
-        } catch (err) {console.error(err);}
-    }
     
     useEffect(() => {
-        getCurrentUser();
         getRecipe();
     })
 
