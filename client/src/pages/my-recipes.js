@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../api";
+import { UserContext } from '../contexts/Context';
 
 export const MyRecipes = () => {
     const [recipes, setRecipes] = useState([]);
     const navigate = useNavigate();
-    const [currentUsername, setCurrentUsername] = useState("");
-    const userID = window.localStorage.getItem("userID");
+    const {userID, currentUsername} = useContext(UserContext);
 
 
     async function getOwnRecipes() {
@@ -17,18 +17,7 @@ export const MyRecipes = () => {
         } catch (err) {console.error(err);}
     }
 
-    async function getCurrentUser() {
-        try {
-            if(userID){
-                const response = await API.get(`/auth/user/${userID}`);
-                setCurrentUsername(response.data.username);
-            }
-            
-        } catch (err) {console.error(err);}
-    }
-
     useEffect(() => {
-        getCurrentUser();
         getOwnRecipes();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
