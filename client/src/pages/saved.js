@@ -4,11 +4,11 @@ import { UserContext } from '../contexts/Context';
 
 export const Saved = () => {
     const [votedRecipes, setVotedRecipes] = useState([]);
-    const {userID, currentUsername} = useContext(UserContext);
+    const {user} = useContext(UserContext);
 
     async function fetchVotedRecipes () {
         try {
-            const response = await API.get(`/recipes/get-voted-recipes/${userID}`);
+            const response = await API.get(`/recipes/get-voted-recipes/${user.id}`);
             setVotedRecipes(response.data.votedRecipes);
             
         } catch (err) {console.error(err);}
@@ -33,7 +33,7 @@ export const Saved = () => {
                         <div style={{ flex: 2, margin: '0 20px' }}>
                             <h2 className="card-title">{item.name}</h2>
                             <p>Cooking Time: {item.cookingTime} minutes</p>
-                            <h6>Author: {item.creator.username ? item.creator.username === currentUsername ? `${item.creator.username} (Me)` : item.creator.username : 'Unknown'}</h6>
+                            <h6>Author: {item.creator.username ? item.creator.username === user.currentUsername ? `${item.creator.username} (Me)` : item.creator.username : 'Unknown'}</h6>
                             <a href={`/recipe/${item._id}`}>View Recipe</a>
                         </div>
 

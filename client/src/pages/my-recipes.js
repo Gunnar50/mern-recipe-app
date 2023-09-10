@@ -6,12 +6,12 @@ import { UserContext } from '../contexts/Context';
 export const MyRecipes = () => {
     const [recipes, setRecipes] = useState([]);
     const navigate = useNavigate();
-    const {userID, currentUsername} = useContext(UserContext);
+    const {user} = useContext(UserContext);
 
 
     async function getOwnRecipes() {
         try {
-            const response = await API.get(`/recipes/${userID}`);
+            const response = await API.get(`/recipes/${user.id}`);
             setRecipes(response.data.recipes);
             
         } catch (err) {console.error(err);}
@@ -51,7 +51,7 @@ export const MyRecipes = () => {
                         <div style={{ flex: 2, margin: '0 20px' }}>
                             <h2 className="card-title">{item.name}</h2>
                             <p>Cooking Time: {item.cookingTime} minutes</p>
-                            <h6>Author: {item.creator.username ? item.creator.username === currentUsername ? `${item.creator.username} (Me)` : item.creator.username : 'Unknown'}</h6>
+                            <h6>Author: {item.creator.username ? item.creator.username === user.currentUsername ? `${item.creator.username} (Me)` : item.creator.username : 'Unknown'}</h6>
                             <a href={`/recipe/${item._id}`}>View Recipe</a>
                         </div>
 

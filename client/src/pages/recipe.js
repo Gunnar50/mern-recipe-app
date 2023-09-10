@@ -8,7 +8,7 @@ export default function Recipe() {
     const {recipeID} = useParams();
     const [recipe, setRecipe] = useState(null);
     const [comment, setComment] = useState("");
-    const {userID, currentUsername} = useContext(UserContext);
+    const {user} = useContext(UserContext);
 
     const getRecipe = async() => {
         try{
@@ -24,7 +24,7 @@ export default function Recipe() {
     const submitComment = async() => {
         try {
             await API.post(`/recipes/${recipeID}`, {
-                comment: comment, creator: userID
+                comment: comment, creator: user.id
             });
             getRecipe();
         } catch (err) {console.error(err);}
@@ -45,7 +45,7 @@ export default function Recipe() {
                     <div style={{ flex: 2, margin: '0 20px' }}>
                         <h1 className="card-title">{recipe.name}</h1>
                         <p><strong>Cooking Time:</strong> {recipe.cookingTime} minutes</p>
-                        <p><strong>Author:</strong> {recipe.creator.username ? recipe.creator.username === currentUsername ? `${recipe.creator.username} (Me)` : recipe.creator.username : 'Unknown'}</p>
+                        <p><strong>Author:</strong> {recipe.creator.username ? recipe.creator.username === user.currentUsername ? `${recipe.creator.username} (Me)` : recipe.creator.username : 'Unknown'}</p>
                     </div>
                     
                 </div>
@@ -81,7 +81,7 @@ export default function Recipe() {
                     <div className="mt-5">
                         {recipe.comments.map((comment, index) => (
                             <div key={index} className="card card-body mt-2">
-                                <p className="card-subtitle text-muted">By {recipe.creator.username ? recipe.creator.username === currentUsername ? `${recipe.creator.username} (Me)` : recipe.creator.username : 'Unknown'}</p>
+                                <p className="card-subtitle text-muted">By {recipe.creator.username ? recipe.creator.username === user.currentUsername ? `${recipe.creator.username} (Me)` : recipe.creator.username : 'Unknown'}</p>
                                 <p className="card-text">{comment.comment}</p>
                             </div>
                         ))}

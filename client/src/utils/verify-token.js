@@ -1,18 +1,18 @@
-import axios from "axios";
+import API from "../api/index.js";
 
 export async function verifyToken(token) {
     try {
-        const verifyResponse = await axios.get("http://localhost:3001/auth/verify-token", 
+        const verifyResponse = await API.get("/auth/verify-token", 
             {
                 headers: { authorization: `Bearer ${token}` }
             });
         if (!verifyResponse.data.valid) {
-            console.log("Token verification failed!");
+            // console.log("Token verification failed!");
             return false;
         }
         return true;
     } catch (err) {
-        console.error(err);
+        // console.error(err);
         return false;
     }
 } 

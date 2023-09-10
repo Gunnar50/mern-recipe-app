@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get("/", getAllRecipes)
 router.get("/get-recipes/:id", getVotedRecipesIDs)
-router.get("/get-voted-recipes/:id", getVotedRecipes)
+router.get("/get-voted-recipes/:id", authMiddleware, getVotedRecipes)
 router.get("/get-recipe/:recipeid", getRecipeID)
 router.get("/:userid", authMiddleware, getOwnRecipes)
 router.put("/", authMiddleware, voteForRecipe)

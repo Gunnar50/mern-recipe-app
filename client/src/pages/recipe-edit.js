@@ -6,14 +6,14 @@ import { UserContext } from '../contexts/Context';
 export const Edit = () => {
     const {recipeID} = useParams();
     const navigate = useNavigate();
-    const {userID} = useContext(UserContext);
+    const {user} = useContext(UserContext);
     const [recipe, setRecipe] = useState({
         name: "",
         ingredients: [],
         description: "",
         image: "",
         cookingTime: 0,
-        creator: userID,
+        creator: user.id,
     });
 
     const [ingredientInput, setIngredientInput] = useState("");
