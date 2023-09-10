@@ -9,29 +9,44 @@ export const UserContextProvider = ({children}) => {
 	const initialUser = JSON.parse(window.localStorage.getItem("user")) || null;
   	const initialToken = cookies.access_token || null;
 
-	
-	const [userID, setUserID] = useState(initialUser.userID);
-	const [currentUsername, setCurrentUsername] = useState(initialUser.currentUsername);
-	const [token, setToken] = useState(initialToken);
+	const [user, setUser] = useState({
+		id: initialUser?.userID,
+		currentUsername: initialUser?.currentUsername,
+		token: initialToken,
+		isAuth: false
+	})
+	// const [userID, setUserID] = useState(initialUser?.userID);
+	// const [currentUsername, setCurrentUsername] = useState(initialUser?.currentUsername);
+	// const [token, setToken] = useState(initialToken);
+	// const [isAuth, setIsAuth] = useState(false);
 
 	const login = (userID, currentUsername, token) => {
-		setUserID(userID);
-		setCurrentUsername(currentUsername);
-		setToken(token);
-		setCookies("access_token", token);
+		setUser({
+			id: userID, currentUsername, token, isAuth: true
+		})
+		// setUserID(userID);
+		// setCurrentUsername(currentUsername);
+		// setToken(token);
+		// setCookies("access_token", token);
+		// setIsAuth(true);
 		window.localStorage.setItem("user", JSON.stringify({userID, currentUsername}));
 	}
 
 	const logout = () => {
-		setUserID(null);
-		setToken(null);
-		removeCookies("access_token");
+		setUser({
+			id: null, currentUsername: null, token: null, isAuth: false
+		})
+		// setUserID(null);
+		// setToken(null);
+		// setCurrentUsername(null)
+		// removeCookies("access_token");
+		// setIsAuth(false);
 		window.localStorage.removeItem("user");
 	}
 
 	return (
 		<UserContext.Provider value={{
-			userID, login, logout, token, currentUsername
+			user, login, logout,
 		}}> 
 		{children}
 		</UserContext.Provider>
