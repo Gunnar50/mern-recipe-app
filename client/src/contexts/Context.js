@@ -15,20 +15,13 @@ export const UserContextProvider = ({children}) => {
 		token: initialToken,
 		isAuth: false
 	})
-	// const [userID, setUserID] = useState(initialUser?.userID);
-	// const [currentUsername, setCurrentUsername] = useState(initialUser?.currentUsername);
-	// const [token, setToken] = useState(initialToken);
-	// const [isAuth, setIsAuth] = useState(false);
+
 
 	const login = (userID, currentUsername, token) => {
 		setUser({
 			id: userID, currentUsername, token, isAuth: true
 		})
-		// setUserID(userID);
-		// setCurrentUsername(currentUsername);
-		// setToken(token);
-		// setCookies("access_token", token);
-		// setIsAuth(true);
+
 		window.localStorage.setItem("user", JSON.stringify({userID, currentUsername}));
 	}
 
