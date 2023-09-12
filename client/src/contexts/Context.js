@@ -29,11 +29,7 @@ export const UserContextProvider = ({children}) => {
 		setUser({
 			id: null, currentUsername: null, token: null, isAuth: false
 		})
-		// setUserID(null);
-		// setToken(null);
-		// setCurrentUsername(null)
-		// removeCookies("access_token");
-		// setIsAuth(false);
+		
 		window.localStorage.removeItem("user");
 	}
 
