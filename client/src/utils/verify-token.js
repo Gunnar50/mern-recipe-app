@@ -7,12 +7,12 @@ export async function verifyToken(token) {
                 headers: { authorization: `Bearer ${token}` }
             });
         if (!verifyResponse.data.valid) {
-            // console.log("Token verification failed!");
+            
             return false;
         }
         return true;
     } catch (err) {
-        // console.error(err);
+        
         return false;
     }
 } 
