@@ -21,6 +21,7 @@ export const UserContextProvider = ({children}) => {
 		setUser({
 			id: userID, currentUsername, token, isAuth: true
 		})
+		setCookies("access_token", token);
 
 		window.localStorage.setItem("user", JSON.stringify({userID, currentUsername}));
 	}
@@ -28,8 +29,8 @@ export const UserContextProvider = ({children}) => {
 	const logout = () => {
 		setUser({
 			id: null, currentUsername: null, token: null, isAuth: false
-		})
-		
+		});
+		removeCookies("access_token");
 		window.localStorage.removeItem("user");
 	}
 
